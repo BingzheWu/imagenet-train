@@ -20,14 +20,17 @@ def create_tfrecords(images_list, records_path, resize = (224, 224)):
     num_example = 0
     with open(images_list, 'r') as f:
         for l in f.readlines():
-            print num_example
+            if num_example >2:
+                break
             try:
                 l = l.split(',')
                 image = misc.imread(os.path.join(ImageNetDir, l[1], l[2].strip()))
                 if resize is not None:
                     image = misc.imresize(image, resize)
                 height, width, channel = image.shape
+                print image.shape
                 label = int(l[0])
+                print height
                 example = tf.train.Example(features = tf.train.Features(feature = {
                     'height': tf.train.Feature(int64_list = tf.train.Int64List(value = [height])),
                     'width': tf.train.Feature(int64_list = tf.train.Int64List(value = [width])),
@@ -43,5 +46,5 @@ def create_tfrecords(images_list, records_path, resize = (224, 224)):
         writer.close()
 if __name__ == '__main__':
     #create_images_path_list_and_labels('train.txt')
-    create_tfrecords('train.txt', '/media/1T/ImageNet/train.record')
+    create_tfrecords('train.txt', '/media/1T/ImageNet/train1.record')
 
